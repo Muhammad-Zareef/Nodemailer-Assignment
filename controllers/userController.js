@@ -64,18 +64,19 @@ const home = async (req, res) => {
     }
 }
 
+// Create a reusable transporter object using SMTP transport.
+const transporter = nodemailer.createTransport({
+    host: process.env.SMTP_HOST,
+    port: 587,
+    secure: false, // use false for STARTTLS; true for SSL on port 465
+    auth: {
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASS,
+    },
+}); 
+
 async function mailSending(req, res) {
     try {
-        // Create a reusable transporter object using SMTP transport.
-        const transporter = nodemailer.createTransport({
-            host: process.env.SMTP_HOST,
-            port: 587,
-            secure: false, // use false for STARTTLS; true for SSL on port 465
-            auth: {
-                user: process.env.SMTP_USER,
-                pass: process.env.SMTP_PASS,
-            },
-        }); 
         const { name, subject, email, message } = req.body; // Destructure and retrieve data from request body.
         // Validate required fields.
         if (!name || !subject || !email || !message) {
