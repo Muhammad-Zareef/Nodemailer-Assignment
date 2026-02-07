@@ -66,9 +66,7 @@ const home = async (req, res) => {
 
 // Create a reusable transporter object using SMTP transport.
 const transporter = nodemailer.createTransport({
-    host: process.env.SMTP_HOST,
-    port: 587,
-    secure: false, // use false for STARTTLS; true for SSL on port 465
+    service: "gmail",
     auth: {
         user: process.env.SMTP_USER,
         pass: process.env.SMTP_PASS,
@@ -88,7 +86,15 @@ async function mailSending(req, res) {
             to: `${name} <${email}>`, // Recipient's name and email address.
             replyTo: process.env.REPLY_TO, // Sets the email address for recipient responses.
             subject: subject, // Subject line.
-            text: message, // Plaintext body.
+            text: `
+                Hello ${name},
+
+                ${message}
+
+                No action is required from your side.
+
+                Thank you
+            `, // Plaintext body.
         };
         // Send email and log the response.
         const info = await transporter.sendMail(mailOptions);
